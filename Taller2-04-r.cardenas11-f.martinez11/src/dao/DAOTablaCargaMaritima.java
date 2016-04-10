@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import vos.Carga;
 import vos.Carga_maritima;
 
 public class DAOTablaCargaMaritima 
@@ -48,6 +49,22 @@ public class DAOTablaCargaMaritima
 		sql += cargaMar.getID_CARGA() + ",";
 		sql += cargaMar.getID_BUQUE() + ",";
 		sql += cargaMar.getID_EQUIPO_APOYO() + ")";
+
+		System.out.println("SQL stmt:" + sql);
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+
+	}
+	
+	public void updateCarga(Carga cargaMar) throws SQLException, Exception {
+
+		String sql = "INSERT INTO CARGAR VALUES (";
+		sql += cargaMar.getID_CARGA() + ",";
+		sql += cargaMar.getCANTIDAD() + ",";
+		sql += cargaMar.getTIPO() + ",";
+		sql += cargaMar.getESTADO() + ")";
 
 		System.out.println("SQL stmt:" + sql);
 

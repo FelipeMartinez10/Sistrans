@@ -14,6 +14,7 @@ import dao.DAOTablaExportadores;
 import dao.DAOTablaLLegadas;
 import dao.DAOTablaSalidas;
 import vos.Buque;
+import vos.Carga;
 import vos.Carga_maritima;
 import vos.Exportador;
 import vos.ListaBuques;
@@ -282,6 +283,38 @@ public class PuertoAndesMaster {
 		}
 	}
 
+	public void updateCarga(Carga carga) throws Exception {
+		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
+		try 
+		{
+			//////Transacción
+			
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoSalida.setConn(conn);
+			daoSalida.updateCarga(carga);
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoSalida.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 
 
 	

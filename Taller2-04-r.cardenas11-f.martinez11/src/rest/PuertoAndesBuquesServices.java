@@ -18,6 +18,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import tm.PuertoAndesMaster;
 import vos.Buque;
+import vos.Carga;
 import vos.Carga_maritima;
 import vos.ListaBuques;
 import vos.Salida;
@@ -68,6 +69,20 @@ public class PuertoAndesBuquesServices {
 		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
 		try {
 			tm.updateCargaMaritima(cargaMaritima);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(cargaMaritima).build();
+	}
+	
+	@POST
+	@Path("/Carga")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateCarga(Carga cargaMaritima) {
+		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
+		try {
+			tm.updateCarga(cargaMaritima);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
