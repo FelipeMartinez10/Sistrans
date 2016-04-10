@@ -8,11 +8,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import dao.DAOTablaAlojamientoBodega;
 import dao.DAOTablaBuques;
 import dao.DAOTablaCargaMaritima;
 import dao.DAOTablaExportadores;
 import dao.DAOTablaLLegadas;
 import dao.DAOTablaSalidas;
+import vos.Alojamiento_bodega;
+import vos.Bodega;
 import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
@@ -260,6 +263,38 @@ public class PuertoAndesMaster {
 			conn.setAutoCommit(false);
 			daoSalida.setConn(conn);
 			daoSalida.updateCargaMaritima(carga);
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoSalida.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	public void registrarAlojamiento(Alojamiento_bodega pAloja) throws Exception {
+		DAOTablaAlojamientoBodega daoSalida = new DAOTablaAlojamientoBodega();
+		try 
+		{
+			//////Transacción
+			
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoSalida.setConn(conn);
+			daoSalida.registrarAlojamiento(pAloja);
 			conn.commit();
 
 		} catch (SQLException e) {
