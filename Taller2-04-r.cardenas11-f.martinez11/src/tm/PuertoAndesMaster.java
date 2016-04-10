@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import dao.DAOTablaAlojamientoBodega;
+import dao.DAOTablaBodega;
 import dao.DAOTablaBuques;
 import dao.DAOTablaCargaMaritima;
 import dao.DAOTablaExportadores;
@@ -26,6 +27,7 @@ import vos.ListaLLegadas;
 import vos.ListaSalidas;
 import vos.Salida;
 import vos.LLegada;
+import vos.ListaBodegasLibres;
 
 
 public class PuertoAndesMaster {
@@ -351,7 +353,37 @@ public class PuertoAndesMaster {
 		}
 	}
 
+	public ListaBodegasLibres darBodegasLibres() throws Exception {
+		ArrayList<Bodega> bodegas;
+		DAOTablaBodega daoBodegas = new DAOTablaBodega();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			daoBodegas.setConn(conn);
+			bodegas = daoBodegas.getBodegasLibres();
 
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoBodegas.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaBodegasLibres(bodegas);
+	}
 	
 	
 }
