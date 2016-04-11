@@ -6,9 +6,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import dao.DAOTablaAlojamientoBodega;
+import dao.DAOTablaBodega;
 import dao.DAOTablaBuques;
 import dao.DAOTablaCargaMaritima;
 import dao.DAOTablaExportadores;
@@ -26,6 +29,7 @@ import vos.ListaLLegadas;
 import vos.ListaSalidas;
 import vos.Salida;
 import vos.LLegada;
+import vos.ListaBodegasLibres;
 
 
 public class PuertoAndesMaster {
@@ -285,6 +289,40 @@ public class PuertoAndesMaster {
 			}
 		}
 	}
+	
+	public void descargarBuque(Carga_maritima carga) throws Exception {
+		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
+		try 
+		{
+			//////Transacción
+			
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoSalida.setConn(conn);
+			daoSalida.descargarCargaDeBarco(carga);;
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoSalida.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
 	public void registrarAlojamiento(Alojamiento_bodega pAloja) throws Exception {
 		DAOTablaAlojamientoBodega daoSalida = new DAOTablaAlojamientoBodega();
 		try 
@@ -351,7 +389,17 @@ public class PuertoAndesMaster {
 		}
 	}
 
+	public ListaBodegasLibres darBodegasLibres() throws Exception {
+		ArrayList<Bodega> bodegas;
+		DAOTablaBodega daoBodegas = new DAOTablaBodega();
+		try 
+		{
+			//////TransacciÃ³n
+			this.conn = darConexion();
+			daoBodegas.setConn(conn);
+			bodegas = daoBodegas.getBodegasLibres();
 
+<<<<<<< HEAD
 	public void updateCargaMaritimaYalojamiento(Carga_maritima carga) throws Exception {
 		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
 		DAOTablaAlojamientoBodega dao2 = new DAOTablaAlojamientoBodega();
@@ -367,6 +415,8 @@ public class PuertoAndesMaster {
 			dao2.eliminarCargaAlojada(carga.getID_CARGA());
 			conn.commit();
 
+=======
+>>>>>>> 22287ea4ae686948b5cd16f396aa1f4b7650a740
 		} catch (SQLException e) {
 			System.err.println("SQLException:" + e.getMessage());
 			e.printStackTrace();
@@ -377,7 +427,11 @@ public class PuertoAndesMaster {
 			throw e;
 		} finally {
 			try {
+<<<<<<< HEAD
 				daoSalida.cerrarRecursos();
+=======
+				daoBodegas.cerrarRecursos();
+>>>>>>> 22287ea4ae686948b5cd16f396aa1f4b7650a740
 				if(this.conn!=null)
 					this.conn.close();
 			} catch (SQLException exception) {
@@ -386,6 +440,34 @@ public class PuertoAndesMaster {
 				throw exception;
 			}
 		}
+<<<<<<< HEAD
+=======
+		return new ListaBodegasLibres(bodegas);
+	}
+	public void descargarBuqueRq11(Carga_maritima carga) throws Exception {
+		
+		List<Bodega> bodegasLibres = darBodegasLibres().getBodegas();
+		Iterator<Bodega> it = bodegasLibres.iterator();
+		boolean seguir = true;
+		Bodega res = null;
+		while(it.hasNext() && seguir)
+		{
+			Bodega actual = (Bodega) it.next();
+			if( actual != null)
+			{
+				seguir = false;
+				res = actual;
+			}
+		}
+		if(res != null)
+		{
+			descargarBuque(carga);
+			Alojamiento_bodega nuevo = new Alojamiento_bodega(res.getID_BODEGA(),1,carga.getID_CARGA());
+			registrarAlojamiento(nuevo);
+		}
+		
+		
+>>>>>>> 22287ea4ae686948b5cd16f396aa1f4b7650a740
 	}
 	
 	
