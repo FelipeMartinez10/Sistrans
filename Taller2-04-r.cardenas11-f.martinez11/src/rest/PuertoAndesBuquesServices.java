@@ -89,6 +89,32 @@ public class PuertoAndesBuquesServices {
 		return Response.status(200).entity(cargaMaritima).build();
 	}
 	
+	@DELETE
+	@Path("/descargar")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response descargarCargaMaritima(Carga_maritima cargaMaritima) {
+		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
+		try {
+			tm.descargarBuque(cargaMaritima);;
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(cargaMaritima).build();
+	}
 	
+	@POST
+	@Path("/descargarBuque")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response descargarBuque(Carga_maritima cargaMaritima) {
+		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
+		try {
+			tm.descargarBuqueRq11(cargaMaritima);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(cargaMaritima).build();
+	}
 	
 }

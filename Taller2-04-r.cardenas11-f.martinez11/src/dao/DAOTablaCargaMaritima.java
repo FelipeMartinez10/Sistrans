@@ -57,6 +57,19 @@ public class DAOTablaCargaMaritima
 		prepStmt.executeQuery();
 
 	}
+	public void descargarCargaDeBarco(Carga_maritima cargaMar)throws SQLException, Exception
+	{
+		String sql = "DELETE FROM CARGAR_MARITIMA "
+				+ "WHERE ID_BUQUE = "
+				+cargaMar.getID_BUQUE()+" AND ID_CARGA = "+
+				cargaMar.getID_CARGA();
+
+		System.out.println("SQL stmt:" + sql);
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+	}
 	
 	public void updateCarga(Carga cargaMar) throws SQLException, Exception {
 

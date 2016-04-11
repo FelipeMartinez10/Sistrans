@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import dao.DAOTablaAlojamientoBodega;
@@ -287,6 +289,40 @@ public class PuertoAndesMaster {
 			}
 		}
 	}
+	
+	public void descargarBuque(Carga_maritima carga) throws Exception {
+		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
+		try 
+		{
+			//////Transacción
+			
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoSalida.setConn(conn);
+			daoSalida.descargarCargaDeBarco(carga);;
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoSalida.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
 	public void registrarAlojamiento(Alojamiento_bodega pAloja) throws Exception {
 		DAOTablaAlojamientoBodega daoSalida = new DAOTablaAlojamientoBodega();
 		try 
@@ -383,6 +419,30 @@ public class PuertoAndesMaster {
 			}
 		}
 		return new ListaBodegasLibres(bodegas);
+	}
+	public void descargarBuqueRq11(Carga_maritima carga) throws Exception {
+		
+		List<Bodega> bodegasLibres = darBodegasLibres().getBodegas();
+		Iterator<Bodega> it = bodegasLibres.iterator();
+		boolean seguir = true;
+		Bodega res = null;
+		while(it.hasNext() && seguir)
+		{
+			Bodega actual = (Bodega) it.next();
+			if( actual != null)
+			{
+				seguir = false;
+				res = actual;
+			}
+		}
+		if(res != null)
+		{
+			descargarBuque(carga);
+			Alojamiento_bodega nuevo = new Alojamiento_bodega(res.getID_BODEGA(),1,carga.getID_CARGA());
+			registrarAlojamiento(nuevo);
+		}
+		
+		
 	}
 	
 	
