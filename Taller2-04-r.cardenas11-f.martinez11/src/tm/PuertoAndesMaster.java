@@ -352,6 +352,41 @@ public class PuertoAndesMaster {
 	}
 
 
+	public void updateCargaMaritimaYalojamiento(Carga_maritima carga) throws Exception {
+		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
+		DAOTablaAlojamientoBodega dao2 = new DAOTablaAlojamientoBodega();
+		try 
+		{
+			//////Transacción
+			
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoSalida.setConn(conn);
+			daoSalida.updateCargaMaritima(carga);
+			dao2.setConn(conn);
+			dao2.eliminarCargaAlojada(carga.getID_CARGA());
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoSalida.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 	
 	
 }

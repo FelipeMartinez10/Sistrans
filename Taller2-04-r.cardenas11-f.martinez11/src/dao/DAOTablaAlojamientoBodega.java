@@ -72,7 +72,18 @@ public class DAOTablaAlojamientoBodega
 		prepStmt.executeQuery();
 	}
 	
-	
+	public void eliminarCargaAlojada(int id) throws SQLException
+	{
+		//String sql = " DELETE FROM \"ISIS2304B041610\".\"ALOJAMIENTO_BODEGA\" WHERE ID_CARGA = "+id+"; " ;
+		String sql = "DELETE FROM \"ISIS2304B041610\".\"ALOJAMIENTO_BODEGA\" WHERE ID_CARGA = 9" ;
+		
+		
+		System.out.println("SQL stmt:" + sql);
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+	}
 	
 	
 
