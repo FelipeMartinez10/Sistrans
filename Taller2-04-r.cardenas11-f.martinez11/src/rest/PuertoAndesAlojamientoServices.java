@@ -94,6 +94,19 @@ public class PuertoAndesAlojamientoServices {
 		}
 		return Response.status(200).entity(libres).build();
 	}
+	@POST
+	@Path("/CargarAlojamiento")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateCargaAlojamiento(Carga_maritima cargaMaritima) {
+		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
+		try {
+			tm.updateCargaMaritimaYalojamiento(cargaMaritima);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(cargaMaritima).build();
+	}
 	
 	
 	

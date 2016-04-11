@@ -399,24 +399,6 @@ public class PuertoAndesMaster {
 			daoBodegas.setConn(conn);
 			bodegas = daoBodegas.getBodegasLibres();
 
-<<<<<<< HEAD
-	public void updateCargaMaritimaYalojamiento(Carga_maritima carga) throws Exception {
-		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
-		DAOTablaAlojamientoBodega dao2 = new DAOTablaAlojamientoBodega();
-		try 
-		{
-			//////Transacción
-			
-			this.conn = darConexion();
-			conn.setAutoCommit(false);
-			daoSalida.setConn(conn);
-			daoSalida.updateCargaMaritima(carga);
-			dao2.setConn(conn);
-			dao2.eliminarCargaAlojada(carga.getID_CARGA());
-			conn.commit();
-
-=======
->>>>>>> 22287ea4ae686948b5cd16f396aa1f4b7650a740
 		} catch (SQLException e) {
 			System.err.println("SQLException:" + e.getMessage());
 			e.printStackTrace();
@@ -427,11 +409,7 @@ public class PuertoAndesMaster {
 			throw e;
 		} finally {
 			try {
-<<<<<<< HEAD
-				daoSalida.cerrarRecursos();
-=======
 				daoBodegas.cerrarRecursos();
->>>>>>> 22287ea4ae686948b5cd16f396aa1f4b7650a740
 				if(this.conn!=null)
 					this.conn.close();
 			} catch (SQLException exception) {
@@ -440,8 +418,6 @@ public class PuertoAndesMaster {
 				throw exception;
 			}
 		}
-<<<<<<< HEAD
-=======
 		return new ListaBodegasLibres(bodegas);
 	}
 	public void descargarBuqueRq11(Carga_maritima carga) throws Exception {
@@ -467,8 +443,45 @@ public class PuertoAndesMaster {
 		}
 		
 		
->>>>>>> 22287ea4ae686948b5cd16f396aa1f4b7650a740
+	}
+	public void updateCargaMaritimaYalojamiento(Carga_maritima carga) throws Exception {
+		DAOTablaCargaMaritima daoSalida = new DAOTablaCargaMaritima();
+		DAOTablaAlojamientoBodega dao2 = new DAOTablaAlojamientoBodega();
+		try 
+		{
+			//////Transacción
+			
+			this.conn = darConexion();
+			conn.setAutoCommit(false);
+			daoSalida.setConn(conn);
+			daoSalida.updateCargaMaritima(carga);
+			dao2.setConn(conn);
+			dao2.eliminarCargaAlojada(carga.getID_CARGA());
+			conn.commit();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoSalida.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
 	}
 	
 	
 }
+	
+	
+
