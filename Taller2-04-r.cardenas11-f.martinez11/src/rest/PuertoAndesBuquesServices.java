@@ -21,7 +21,6 @@ import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
 import vos.ListaBuques;
-import vos.ListaCargar_maritima;
 import vos.Salida;
 
 
@@ -116,23 +115,6 @@ public class PuertoAndesBuquesServices {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		return Response.status(200).entity(cargaMaritima).build();
-	}
-	
-	
-	@GET
-	@Path("/cargarMaritimas")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public Response getCargarMaritimas() {
-		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
-		ListaCargar_maritima cargarMarit;
-		System.out.println("span");
-		try {
-			System.out.println("span");
-			cargarMarit = tm.darCargarMaritima();
-		} catch (Exception e) {
-			return Response.status(500).entity(doErrorMessage(e)).build();
-		}
-		return Response.status(200).entity(cargarMarit).build();
 	}
 	
 }

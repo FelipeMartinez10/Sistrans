@@ -22,10 +22,8 @@ import vos.Bodega;
 import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
-import vos.Carga_maritimaEvento;
 import vos.Exportador;
 import vos.ListaBuques;
-import vos.ListaCargar_maritima;
 import vos.ListaExportadores;
 import vos.ListaLLegadas;
 import vos.ListaSalidas;
@@ -481,41 +479,6 @@ public class PuertoAndesMaster {
 			}
 		}
 	}
-	
-	
-	
-	public ListaCargar_maritima darCargarMaritima() throws Exception {
-		ArrayList<Carga_maritimaEvento> cargaMarit;
-		DAOTablaCargaMaritima cargarMar = new DAOTablaCargaMaritima();
-		try 
-		{
-			//////Transacción
-			this.conn = darConexion();
-			cargarMar.setConn(conn);
-			cargaMarit =  cargarMar.darCargasMaritimas();
-
-		} catch (SQLException e) {
-			System.err.println("SQLException:" + e.getMessage());
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			System.err.println("GeneralException:" + e.getMessage());
-			e.printStackTrace();
-			throw e;
-		} finally {
-			try {
-				cargarMar.cerrarRecursos();
-				if(this.conn!=null)
-					this.conn.close();
-			} catch (SQLException exception) {
-				System.err.println("SQLException closing resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}
-		return new ListaCargar_maritima(cargaMarit);
-	}
-	
 	
 	
 }

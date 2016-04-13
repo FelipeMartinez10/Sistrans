@@ -2,16 +2,11 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 
-import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
-import vos.Carga_maritimaEvento;
 
 public class DAOTablaCargaMaritima 
 {
@@ -91,30 +86,5 @@ public class DAOTablaCargaMaritima
 		prepStmt.executeQuery();
 
 	}
-	//FIXME
-	public ArrayList<Carga_maritimaEvento> darCargasMaritimas() throws SQLException, Exception {
-		ArrayList<Carga_maritimaEvento> cargarMaritimas = new ArrayList<Carga_maritimaEvento>();
-
-		String sql = "SELECT id_muelle, id_carga, id_buque, id_equipo_apoyo, hora, fecha FROM CARGAR_MARITIMA INNER JOIN EVENTO_PUERTO on CARGAR_MARITIMA.id_carga_maritima = EVENTO_PUERTO.id_evento";
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet rs = prepStmt.executeQuery();
-
-		while (rs.next()) {
-			int a = Integer.parseInt(rs.getString("ID_OPERACION"));
-			int b = Integer.parseInt(rs.getString("ID_CARGA_MARITIMA"));
-			int c = Integer.parseInt(rs.getString("ID_MUELLE"));
-			int d = Integer.parseInt(rs.getString("ID_CARGA"));
-			int e = Integer.parseInt(rs.getString("ID_BUQUE"));
-			int f = Integer.parseInt(rs.getString("ID_EQUIPO_APOYO"));
-			Date g = rs.getDate("FECHA");
-			Timestamp h = rs.getTimestamp("HORA");
-			
-			cargarMaritimas.add(new Carga_maritimaEvento(a, b, c,d,e,f,g,h));
-		}
-		return cargarMaritimas;
-	}
-	
 
 }
