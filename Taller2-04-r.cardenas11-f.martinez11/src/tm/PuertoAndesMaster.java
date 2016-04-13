@@ -18,6 +18,7 @@ import dao.DAOTablaExportadores;
 import dao.DAOTablaLLegadas;
 import dao.DAOTablaSalidas;
 import vos.Alojamiento_bodega;
+import vos.Alojamineto_bodegaEvento;
 import vos.Bodega;
 import vos.Buque;
 import vos.Carga;
@@ -31,6 +32,7 @@ import vos.ListaLLegadas;
 import vos.ListaSalidas;
 import vos.Salida;
 import vos.LLegada;
+import vos.ListaAlojamiento;
 import vos.ListaBodegasLibres;
 
 
@@ -492,6 +494,7 @@ public class PuertoAndesMaster {
 			//////Transacción
 			this.conn = darConexion();
 			cargarMar.setConn(conn);
+			System.out.println("ento acaaaa");
 			cargaMarit =  cargarMar.darCargasMaritimas();
 
 		} catch (SQLException e) {
@@ -516,6 +519,38 @@ public class PuertoAndesMaster {
 		return new ListaCargar_maritima(cargaMarit);
 	}
 	
+	public ListaAlojamiento darAlojamiento() throws Exception {
+		ArrayList<Alojamineto_bodegaEvento> cargaMarit;
+		DAOTablaAlojamientoBodega aloja = new DAOTablaAlojamientoBodega();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			aloja.setConn(conn);
+			System.out.println("ento acaaaa");
+			cargaMarit =  aloja.darAlojamiento();
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				aloja.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaAlojamiento(cargaMarit);
+	}
 	
 	
 }

@@ -95,21 +95,22 @@ public class DAOTablaCargaMaritima
 	public ArrayList<Carga_maritimaEvento> darCargasMaritimas() throws SQLException, Exception {
 		ArrayList<Carga_maritimaEvento> cargarMaritimas = new ArrayList<Carga_maritimaEvento>();
 
-		String sql = "SELECT id_muelle, id_carga, id_buque, id_equipo_apoyo, hora, fecha FROM CARGAR_MARITIMA INNER JOIN EVENTO_PUERTO on CARGAR_MARITIMA.id_carga_maritima = EVENTO_PUERTO.id_evento";
+		String sql = "SELECT id_operacion ,id_muelle, id_carga,id_carga_maritima, id_buque, id_equipo_apoyo, hora, fecha FROM CARGAR_MARITIMA INNER JOIN EVENTO_PUERTO on CARGAR_MARITIMA.id_carga_maritima = EVENTO_PUERTO.id_evento";
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
-
+		System.out.println("watabitusberry queeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 		while (rs.next()) {
-			int a = Integer.parseInt(rs.getString("ID_OPERACION"));
-			int b = Integer.parseInt(rs.getString("ID_CARGA_MARITIMA"));
-			int c = Integer.parseInt(rs.getString("ID_MUELLE"));
-			int d = Integer.parseInt(rs.getString("ID_CARGA"));
-			int e = Integer.parseInt(rs.getString("ID_BUQUE"));
-			int f = Integer.parseInt(rs.getString("ID_EQUIPO_APOYO"));
-			Date g = rs.getDate("FECHA");
-			Timestamp h = rs.getTimestamp("HORA");
+			System.out.println("0");
+			int a = Integer.parseInt(rs.getString("id_operacion"));
+			int b = Integer.parseInt(rs.getString("id_carga_maritima"));
+			int c = Integer.parseInt(rs.getString("id_muelle"));
+			int d = Integer.parseInt(rs.getString("id_carga"));
+			int e = Integer.parseInt(rs.getString("id_buque"));
+			int f = Integer.parseInt(rs.getString("id_equipo_apoyo"));
+			Date g = rs.getDate("fecha");
+			Timestamp h = rs.getTimestamp("hora");
 			
 			cargarMaritimas.add(new Carga_maritimaEvento(a, b, c,d,e,f,g,h));
 		}
