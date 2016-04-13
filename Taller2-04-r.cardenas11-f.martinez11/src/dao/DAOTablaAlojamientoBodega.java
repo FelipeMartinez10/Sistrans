@@ -4,12 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import vos.Alojamiento_bodega;
+import vos.Alojamineto_bodegaEvento;
 import vos.Bodega;
 import vos.Buque;
 import vos.Carga;
+import vos.Carga_maritimaEvento;
 import vos.Salida;
 
 public class DAOTablaAlojamientoBodega 
@@ -85,6 +89,27 @@ public class DAOTablaAlojamientoBodega
 		prepStmt.executeQuery();
 	}
 	
+	
+	public ArrayList<Alojamineto_bodegaEvento> darAlojamiento() throws SQLException, Exception {
+		ArrayList<Alojamineto_bodegaEvento> cargarMaritimas = new ArrayList<Alojamineto_bodegaEvento>();
+
+		String sql = "SELECT id_bodega, id_carga,  hora, fecha FROM ALOJAMIENTO_BODEGA INNER JOIN EVENTO_PUERTO on ALOJAMIENTO_BODEGA.id_evento = EVENTO_PUERTO.id_evento";
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		System.out.println("watabitusberry queeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+		while (rs.next()) {
+			
+			int a = Integer.parseInt(rs.getString("id_bodega"));
+			int b = Integer.parseInt(rs.getString("id_carga"));
+			Date g = rs.getDate("fecha");
+			Timestamp h = rs.getTimestamp("hora");
+			
+			cargarMaritimas.add(new Alojamineto_bodegaEvento(a, b, g,h));
+		}
+		return cargarMaritimas;
+	}
 	
 
 }

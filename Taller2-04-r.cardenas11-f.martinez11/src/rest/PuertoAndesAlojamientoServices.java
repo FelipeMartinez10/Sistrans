@@ -22,6 +22,7 @@ import vos.Bodega;
 import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
+import vos.ListaAlojamiento;
 import vos.ListaBodegasLibres;
 import vos.ListaBuques;
 import vos.ListaSalidas;
@@ -109,5 +110,19 @@ public class PuertoAndesAlojamientoServices {
 	}
 	
 	
-	
+	@GET
+	@Path("/Alojaminetos")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response getAlojamientos() {
+		PuertoAndesMaster tm = new PuertoAndesMaster(getPath());
+		ListaAlojamiento aloja;
+		System.out.println("span");
+		try {
+			System.out.println("span");
+			aloja =  tm.darAlojamiento();
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(aloja).build();
+	}
 }
