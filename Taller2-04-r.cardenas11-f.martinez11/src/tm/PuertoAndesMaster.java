@@ -27,6 +27,7 @@ import vos.Carga_maritimaEvento;
 import vos.Exportador;
 import vos.ListaBuques;
 import vos.ListaCargar_maritima;
+import vos.ListaCargas_maritimaID;
 import vos.ListaExportadores;
 import vos.ListaLLegadas;
 import vos.ListaSalidas;
@@ -441,9 +442,23 @@ public class PuertoAndesMaster {
 		}
 		if(res != null)
 		{
-			descargarBuque(carga);
-			Alojamiento_bodega nuevo = new Alojamiento_bodega(res.getID_BODEGA(),1,carga.getID_CARGA());
-			registrarAlojamiento(nuevo);
+			try
+			{
+				List<Carga_maritima> lista = darCargarMaritimaID(carga.getID_CARGA(),carga.getID_BUQUE()).getCargas();
+				
+				if(lista.size()>0)
+				{
+					descargarBuque(carga);
+					Alojamiento_bodega nuevo = new Alojamiento_bodega(res.getID_BODEGA(),1,carga.getID_CARGA());
+					registrarAlojamiento(nuevo);
+				}
+				
+			}
+			catch(Exception e)
+			{
+				System.out.println(e.getStackTrace());
+			}
+			
 		}
 		
 		
@@ -551,6 +566,42 @@ public class PuertoAndesMaster {
 		}
 		return new ListaAlojamiento(cargaMarit);
 	}
+
+
+	public ListaCargas_maritimaID darCargarMaritimaID(int id_carga, int id_buque)throws Exception  {
+		ArrayList<Carga_maritima> cargaMarit;
+		DAOTablaCargaMaritima cargarMar = new DAOTablaCargaMaritima();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			cargarMar.setConn(conn);
+			System.out.println("ento acaaaa");
+			cargaMarit =  cargarMar.darCargasMaritimasID(id_carga,id_buque);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				cargarMar.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaCargas_maritimaID(cargaMarit);
+	}
+	
+	
 	
 	
 }

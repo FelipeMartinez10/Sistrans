@@ -74,6 +74,7 @@ public class DAOTablaCargaMaritima
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
+		
 	}
 	
 	public void updateCarga(Carga cargaMar) throws SQLException, Exception {
@@ -100,7 +101,7 @@ public class DAOTablaCargaMaritima
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
-		System.out.println("watabitusberry queeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+		System.out.println("Metodo darCargasMaritimas");
 		while (rs.next()) {
 			System.out.println("0");
 			int a = Integer.parseInt(rs.getString("id_operacion"));
@@ -116,6 +117,33 @@ public class DAOTablaCargaMaritima
 		}
 		return cargarMaritimas;
 	}
+	
+	public ArrayList<Carga_maritima> darCargasMaritimasID(int id_carga, int id_buque) throws SQLException, Exception {
+		ArrayList<Carga_maritima> cargasMaritimas = new ArrayList<Carga_maritima>();
+
+		String sql = "SELECT id_operacion ,id_muelle, id_carga,id_carga_maritima, id_buque, id_equipo_apoyo "
+				+ "FROM CARGAR_MARITIMA WHERE "
+				+ "ID_CARGA = " + id_carga
+				+" AND ID_BUQUE = "+id_buque;
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		System.out.println("Metodo darCargasMaritimasID");
+		while (rs.next()) {
+			int a = Integer.parseInt(rs.getString("id_operacion"));
+			int b = Integer.parseInt(rs.getString("id_carga_maritima"));
+			int c = Integer.parseInt(rs.getString("id_muelle"));
+			int d = Integer.parseInt(rs.getString("id_carga"));
+			int e = Integer.parseInt(rs.getString("id_buque"));
+			int f = Integer.parseInt(rs.getString("id_equipo_apoyo"));
+			
+			cargasMaritimas.add(new Carga_maritima(a, b, c,d,e,f));
+		}
+		return cargasMaritimas;
+	}
+	
+	
 	
 
 }
