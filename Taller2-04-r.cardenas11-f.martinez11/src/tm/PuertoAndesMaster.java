@@ -30,7 +30,13 @@ import vos.ListaCargar_maritima;
 import vos.ListaCargas_maritimaID;
 import vos.ListaExportadores;
 import vos.ListaLLegadas;
+import vos.ListaReq10;
+import vos.ListaReq7;
+import vos.ListaReq9;
 import vos.ListaSalidas;
+import vos.Req10;
+import vos.Req7;
+import vos.Req9;
 import vos.Salida;
 import vos.LLegada;
 import vos.ListaAlojamiento;
@@ -600,8 +606,208 @@ public class PuertoAndesMaster {
 		}
 		return new ListaCargas_maritimaID(cargaMarit);
 	}
+	//FIXME
+	//----------------req7y8----------------------------------------
+	public ListaReq7 darSalidasFiltradas1(String fecha1,String fecha2,String nombre, String tipo) throws Exception {
+		ArrayList<Req7> cargaMarit;
+		DAOTablaSalidas aloja = new DAOTablaSalidas();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			aloja.setConn(conn);
+			
+			cargaMarit =  aloja.darSalidasFiltradas(fecha1, fecha2, nombre, tipo);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				aloja.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaReq7(cargaMarit);
+	}
+	public ListaReq7 darSalidasFiltradas2(String fecha1,String fecha2,String nombre, String tipo) throws Exception {
+		ArrayList<Req7> cargaMarit;
+		DAOTablaSalidas aloja = new DAOTablaSalidas();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			aloja.setConn(conn);
+			
+			cargaMarit =  aloja.darSalidasFiltradas2(fecha1, fecha2, nombre, tipo);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				aloja.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaReq7(cargaMarit);
+	}
 	
+	public ListaReq7 darLLegadasFiltradas1(String fecha1,String fecha2,String nombre, String tipo) throws Exception {
+		ArrayList<Req7> cargaMarit;
+		DAOTablaLLegadas aloja = new DAOTablaLLegadas();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			aloja.setConn(conn);
+			
+			cargaMarit =  aloja.darLLegadasFiltradas(fecha1, fecha2, nombre, tipo);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				aloja.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaReq7(cargaMarit);
+	}
 	
+	public ListaReq7 darLLegadasFiltradas2(String fecha1,String fecha2,String nombre, String tipo) throws Exception {
+		ArrayList<Req7> cargaMarit;
+		DAOTablaLLegadas aloja = new DAOTablaLLegadas();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			aloja.setConn(conn);
+			
+			cargaMarit =  aloja.darLLegadasFiltradas(fecha1, fecha2, nombre, tipo);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				aloja.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaReq7(cargaMarit);
+	}
+	
+	//----------------req9----------------------------------------
+	
+	public ListaReq9 darCargarMaritimaFiltradas(int valor, String tipo)throws Exception  {
+		ArrayList<Req9> cargaMarit;
+		DAOTablaCargaMaritima cargarMar = new DAOTablaCargaMaritima();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			cargarMar.setConn(conn);
+		
+			cargaMarit =  cargarMar.darCargasMaritimasFiltradas(valor, tipo);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				cargarMar.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaReq9(cargaMarit);
+	}
+	
+	//----------------req10---------------------------------------
+	
+	public ListaReq10 darAlojamientoFiltrado(int id) throws Exception {
+		ArrayList<Req10> cargaMarit;
+		DAOTablaAlojamientoBodega aloja = new DAOTablaAlojamientoBodega();
+		try 
+		{
+			//////Transacción
+			this.conn = darConexion();
+			aloja.setConn(conn);
+			System.out.println("ento acaaaa");
+			cargaMarit =  aloja.darAlojamientoFiltrado(id);
+
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				aloja.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return new ListaReq10(cargaMarit);
+	}
 	
 	
 }

@@ -1,12 +1,14 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import vos.Buque;
+import vos.Req7;
 import vos.Salida;
 
 public class DAOTablaSalidas 
@@ -85,6 +87,52 @@ public class DAOTablaSalidas
 			int id_muelle = Integer.parseInt(rs.getString("ID_MUELLE"));
 			int id_buque = Integer.parseInt(rs.getString("ID_BUQUE"));
 			salidas.add(new Salida(id_salida, id_muelle, id_buque));
+		}
+		return salidas;
+	
+	}
+	
+	public ArrayList<Req7> darSalidasFiltradas(String fecha1, String fecha2, String nombre, String tipo) throws SQLException, Exception 
+	{
+		ArrayList<Req7> salidas = new ArrayList<Req7>();
+
+		String sql = "SELECT id_buque,NOMBRE ,FECHA, TIPO FROM( SELECT id_buque AS id,FECHA FROM SALIDA INNER JOIN EVENTO_PUERTO on SALIDA.ID_EVENTO = EVENTO_PUERTO.id_evento)  g INNER JOIN BUQUE on g.id = BUQUE.ID_BUQUE WHERE FECHA > "+ fecha1 +" AND  FECHA < " + fecha2 +" AND NOMBRE = " + nombre + " AND TIPO = " + tipo;
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		while (rs.next()) {
+			
+			
+			int id_buque = Integer.parseInt(rs.getString("ID_BUQUE"));
+			String nombree =  rs.getString("NOMBRE");
+			Date fechaa =  rs.getDate("FECHA");
+			String tipoo =  rs.getString("TIPO");
+			salidas.add(new Req7(tipoo, id_buque, fechaa, nombree));
+		}
+		return salidas;
+	
+	}
+	
+	public ArrayList<Req7> darSalidasFiltradas2(String fecha1, String fecha2, String nombre, String tipo) throws SQLException, Exception 
+	{
+		ArrayList<Req7> salidas = new ArrayList<Req7>();
+
+		String sql = "SELECT id_buque,NOMBRE ,FECHA, TIPO FROM( SELECT id_buque AS id,FECHA FROM SALIDA INNER JOIN EVENTO_PUERTO on SALIDA.ID_EVENTO = EVENTO_PUERTO.id_evento)  g INNER JOIN BUQUE on g.id = BUQUE.ID_BUQUE WHERE FECHA > "+ fecha1 +" AND  FECHA < " + fecha2 +" AND NOMBRE <> " + nombre + " AND TIPO <> " + tipo;
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		while (rs.next()) {
+			
+			
+			int id_buque = Integer.parseInt(rs.getString("ID_BUQUE"));
+			String nombree =  rs.getString("NOMBRE");
+			Date fechaa =  rs.getDate("FECHA");
+			String tipoo =  rs.getString("TIPO");
+			salidas.add(new Req7(tipoo, id_buque, fechaa, nombree));
 		}
 		return salidas;
 	

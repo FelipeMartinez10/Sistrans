@@ -14,6 +14,7 @@ import vos.Bodega;
 import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritimaEvento;
+import vos.Req10;
 import vos.Salida;
 
 public class DAOTablaAlojamientoBodega 
@@ -107,6 +108,27 @@ public class DAOTablaAlojamientoBodega
 			Timestamp h = rs.getTimestamp("hora");
 			
 			cargarMaritimas.add(new Alojamineto_bodegaEvento(a, b, g,h));
+		}
+		return cargarMaritimas;
+	}
+	
+
+	public ArrayList<Req10> darAlojamientoFiltrado(int id) throws SQLException, Exception {
+		ArrayList<Req10> cargarMaritimas = new ArrayList<Req10>();
+
+		String sql = "SELECT id_bodega, id_carga,  fecha FROM ALOJAMIENTO_BODEGA INNER JOIN EVENTO_PUERTO on ALOJAMIENTO_BODEGA.id_evento = EVENTO_PUERTO.id_evento WHERE id = " + id;
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		while (rs.next()) {
+			
+			int a = Integer.parseInt(rs.getString("id_bodega"));
+			int b = Integer.parseInt(rs.getString("id_carga"));
+			Date g = rs.getDate("fecha");
+			
+			
+			cargarMaritimas.add(new Req10(a, b, g));
 		}
 		return cargarMaritimas;
 	}

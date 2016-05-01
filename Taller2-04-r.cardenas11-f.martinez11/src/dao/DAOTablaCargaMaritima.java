@@ -12,6 +12,7 @@ import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
 import vos.Carga_maritimaEvento;
+import vos.Req9;
 
 public class DAOTablaCargaMaritima 
 {
@@ -143,6 +144,30 @@ public class DAOTablaCargaMaritima
 		return cargasMaritimas;
 	}
 	
+	public ArrayList<Req9> darCargasMaritimasFiltradas(int valor, String tipo) throws SQLException, Exception {
+		ArrayList<Req9> cargasMaritimas = new ArrayList<Req9>();
+
+		String sql = " SELECT id_operacion ,id_muelle, id_carga,tipo,cantidad, id_carga_maritima, id_buque, id_equipo_apoyo, fecha FROM (SELECT id_operacion ,id_muelle, id_carga AS id,id_carga_maritima, id_buque, id_equipo_apoyo,  fecha FROM CARGAR_MARITIMA INNER JOIN EVENTO_PUERTO on CARGAR_MARITIMA.id_carga_maritima = EVENTO_PUERTO.id_evento)c INNER JOIN (Select ID_CARGA, TIPO ,cantidad from (SELECT ID_CARGA AS ID FROM EXPORTADOR )a INNER JOIN CARGA on a.ID= CARGA.ID_CARGA) b ON c.id=b.ID_CARGA WHERE CANTIDAD > "+valor+"  AND TIPO = " + tipo;
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		
+		while (rs.next()) {
+			int a = Integer.parseInt(rs.getString("id_operacion"));
+			int b = Integer.parseInt(rs.getString("id_carga_maritima"));
+			int c = Integer.parseInt(rs.getString("id_muelle"));
+			int d = Integer.parseInt(rs.getString("id_carga"));
+			int e = Integer.parseInt(rs.getString("id_buque"));
+			int f = Integer.parseInt(rs.getString("id_equipo_apoyo"));
+			String g = rs.getString("tipo");
+			int h = Integer.parseInt(rs.getString("cantidad"));
+			Date i = rs.getDate("fecha");
+			
+			cargasMaritimas.add(new Req9(a, b, c, d, e, f, i, g));
+		}
+		return cargasMaritimas;
+	}
 	
 	
 
