@@ -116,7 +116,7 @@ public class DAOTablaAlojamientoBodega
 	public ArrayList<Req10> darAlojamientoFiltrado(int id) throws SQLException, Exception {
 		ArrayList<Req10> cargarMaritimas = new ArrayList<Req10>();
 
-		String sql = "SELECT id_bodega, id_carga,  fecha FROM ALOJAMIENTO_BODEGA INNER JOIN EVENTO_PUERTO on ALOJAMIENTO_BODEGA.id_evento = EVENTO_PUERTO.id_evento WHERE id = " + id;
+		String sql = "SELECT id_bodega, id_carga,  fecha FROM ALOJAMIENTO_BODEGA INNER JOIN EVENTO_PUERTO on ALOJAMIENTO_BODEGA.id_evento = EVENTO_PUERTO.id_evento WHERE id_bodega = " + id;
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);

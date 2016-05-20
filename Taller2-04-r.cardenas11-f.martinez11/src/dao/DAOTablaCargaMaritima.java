@@ -147,8 +147,8 @@ public class DAOTablaCargaMaritima
 	public ArrayList<Req9> darCargasMaritimasFiltradas(int valor, String tipo) throws SQLException, Exception {
 		ArrayList<Req9> cargasMaritimas = new ArrayList<Req9>();
 
-		String sql = " SELECT id_operacion ,id_muelle, id_carga,tipo,cantidad, id_carga_maritima, id_buque, id_equipo_apoyo, fecha FROM (SELECT id_operacion ,id_muelle, id_carga AS id,id_carga_maritima, id_buque, id_equipo_apoyo,  fecha FROM CARGAR_MARITIMA INNER JOIN EVENTO_PUERTO on CARGAR_MARITIMA.id_carga_maritima = EVENTO_PUERTO.id_evento)c INNER JOIN (Select ID_CARGA, TIPO ,cantidad from (SELECT ID_CARGA AS ID FROM EXPORTADOR )a INNER JOIN CARGA on a.ID= CARGA.ID_CARGA) b ON c.id=b.ID_CARGA WHERE CANTIDAD > "+valor+"  AND TIPO = " + tipo;
-
+		String sql = " SELECT id_operacion ,id_muelle, id_carga,tipo,cantidad, id_carga_maritima, id_buque, id_equipo_apoyo, fecha FROM (SELECT id_operacion ,id_muelle, id_carga AS id,id_carga_maritima, id_buque, id_equipo_apoyo,  fecha FROM CARGAR_MARITIMA INNER JOIN EVENTO_PUERTO on CARGAR_MARITIMA.id_carga_maritima = EVENTO_PUERTO.id_evento)c INNER JOIN (Select ID_CARGA, TIPO ,cantidad from (SELECT ID_CARGA AS ID FROM EXPORTADOR )a INNER JOIN CARGA on a.ID= CARGA.ID_CARGA) b ON c.id=b.ID_CARGA WHERE CANTIDAD > "+valor+"  AND TIPO = " +"'" + tipo +"'";
+		System.out.println(sql);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();

@@ -4,16 +4,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import javax.naming.InitialContext;
+import javax.transaction.UserTransaction;
+
 import dao.DAOTablaAlojamientoBodega;
 import dao.DAOTablaBodega;
 import dao.DAOTablaBuques;
 import dao.DAOTablaCargaMaritima;
+import dao.DAOTablaDescuentos;
 import dao.DAOTablaExportadores;
 import dao.DAOTablaLLegadas;
 import dao.DAOTablaSalidas;
@@ -24,6 +30,7 @@ import vos.Buque;
 import vos.Carga;
 import vos.Carga_maritima;
 import vos.Carga_maritimaEvento;
+import vos.Descuento;
 import vos.Exportador;
 import vos.ListaBuques;
 import vos.ListaCargar_maritima;
@@ -68,11 +75,23 @@ public class PuertoAndesMaster {
 	private Connection conn;
 
 
+	private Connection con2;
+	
+	public InitialContext context;
+	
+	private final static String usuarioDiego = "ISIS2304B281610";
+	
+	private final static String claveDiego = "LEkpQVC2Tx4m4Gmy";
+	
 	
 	public PuertoAndesMaster(String contextPathP) {
 		connectionDataPath = contextPathP + CONNECTION_DATA_FILE_NAME_REMOTE;
 		initConnectionData();
-	}
+		try{
+		context = new InitialContext();
+	}catch (Exception e )
+		{}
+		}
 
 	
 	private void initConnectionData() {
@@ -101,7 +120,111 @@ public class PuertoAndesMaster {
 		System.out.println("Connecting to: " + url + " With user: " + user + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		return DriverManager.getConnection(url, user, password);
 	}
+	
+	public void iniciarConexiones() throws SQLException
+	{
+		con2 = DriverManager.getConnection(url, usuarioDiego, claveDiego);
+		System.out.println("Connecting to: " + url + " With user: " + usuarioDiego);
+	}
 
+	public Descuento twoPhaseCommitRF15(String idExportador)
+	{
+		Descuento capo= null;
+		DAOTablaDescuentos daoD1 = new DAOTablaDescuentos();
+		DAOTablaDescuentos daoD2 = new DAOTablaDescuentos(); 
+		try
+		{
+			UserTransaction utx = (UserTransaction)context.lookup("java:jboss/UserTransaction");
+			if(EstaEnLosDosLados(idExportador)== true)
+			{
+				try 
+				{
+					iniciarConexiones();
+					utx.begin();
+					try //CONEXION PROPIA
+					{
+						this.conn = darConexion();
+						daoD1.setConn(conn);
+						daoD1.addDescuento(idExportador, "3");
+//						Statement st = this.darConexion().createStatement();
+//						String sql =  "INSERT INTO DESCUENTOS (ID_EXPORTADOR, NOMBRE_EXPORTADOR, DESCUENTO) VALUES ('"+idExportador+"', 'NombreExportadorId:"+ idExportador +"', '3')";
+//						int num = st.executeUpdate(sql);
+//						System.out.println(sql);
+//						int x = st.executeUpdate(sql);
+//						System.out.println(" Se ingresaron estas fiñas " + x);
+//						st.close();
+					}
+					catch(SQLException e)
+					{
+						e.printStackTrace();
+						utx.setRollbackOnly();
+					}
+					try //CONEXION RAFAEL
+					{
+						
+						daoD1.setConn(con2);
+						daoD1.addDescuento(idExportador, "3");
+//						Statement st = conexion2.createStatement();
+//						String sql = "INSERT INTO DESCUENTOS (ID_EXPORTADOR, NOMBRE_EXPORTADOR, DESCUENTO) VALUES ('"+idExportador+"', 'NombreExportadorId:"+ idExportador +"', '3')";
+//						int num = st.executeUpdate(sql);
+//						System.out.println(" Se ingresaron estas fiñas " + num);
+//						st.close();
+						Descuento x = new Descuento(idExportador, "3");
+						capo = x;
+						
+					}
+					catch (SQLException ex)
+					{
+						utx.setRollbackOnly();
+					}
+					utx.commit();
+					con2.close();
+					if(this.conn!=null)
+					{
+						this.conn.close();
+					}
+				}
+				catch(Exception ez)
+				{
+					ez.printStackTrace();
+				}
+			}
+		}
+		catch(Exception o )
+		{
+			o.printStackTrace();
+		}
+		return capo;
+	}
+	public boolean EstaEnLosDosLados(String id) throws SQLException
+	{
+		boolean ans = false; 
+		Connection propia = this.darConexion();
+		iniciarConexiones();
+		int rows1 = 0;
+		int rows2= 0;
+		
+		//CON1
+		
+		String sql1 = "select * from EXPORTADOR where ID_EXPORTADOR = '"+id+ "'";
+		PreparedStatement st1 = propia.prepareStatement(sql1);
+		ResultSet rs = st1.executeQuery();
+		while (rs.next())
+			rows1++;
+		
+		//CON2 EXPORTADORES
+		
+		String sql2 = "select * from EXPORTADORES where ID_EXPORTADOR = '"+id+ "'";
+		PreparedStatement st2 = propia.prepareStatement(sql2);
+		ResultSet rs2 = st1.executeQuery();
+		while (rs2.next())
+			rows2++;
+		if(rows1 >0 && rows2 >0)
+		{
+			ans = true;
+		}
+		return ans; 
+	}
 
 
 	
@@ -715,7 +838,7 @@ public class PuertoAndesMaster {
 			this.conn = darConexion();
 			aloja.setConn(conn);
 			
-			cargaMarit =  aloja.darLLegadasFiltradas(fecha1, fecha2, nombre, tipo);
+			cargaMarit =  aloja.darLLegadasFiltradas2(fecha1, fecha2, nombre, tipo);
 
 		} catch (SQLException e) {
 			System.err.println("SQLException:" + e.getMessage());
